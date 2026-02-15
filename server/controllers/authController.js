@@ -22,7 +22,8 @@ const register = async (req, res) => {
     res.status(201).json({ token, user: { _id: user._id, email: user.email, profile: user.profile } });
   } catch (error) {
     if (error.code === 11000) return res.status(400).json({ error: 'Email already exists' });
-    res.status(400).json({ error: error.message });
+    console.error('Register error:', error.message);
+    res.status(500).json({ error: 'Registration failed. Please try again.' });
   }
 };
 
@@ -43,7 +44,8 @@ const login = async (req, res) => {
     );
     res.json({ token, user: { _id: user._id, email: user.email, profile: user.profile } });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Login error:', error.message);
+    res.status(500).json({ error: 'Login failed. Please try again.' });
   }
 };
 

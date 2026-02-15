@@ -4,6 +4,15 @@ const connectDB = require('./config/db');
 
 require('dotenv').config();
 
+// Validate required env vars before starting
+const required = ['MONGODB_URI', 'JWT_SECRET'];
+const missing = required.filter((key) => !process.env[key]);
+if (missing.length) {
+  console.error('Missing required environment variables:', missing.join(', '));
+  console.error('Set these in Render Dashboard -> Your Service -> Environment');
+  process.exit(1);
+}
+
 const app = express();
 
 // Connect to MongoDB
