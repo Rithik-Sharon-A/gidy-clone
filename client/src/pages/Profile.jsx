@@ -355,16 +355,16 @@ function Profile() {
   };
 
   const inputCls = 'p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm w-full';
-  const cardCls = 'bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4';
+  const cardCls = 'bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3 sm:p-4 w-full';
 
   if (loading) return <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8 text-center text-gray-500 dark:text-gray-400">Loading...</div>;
   if (error && !profile && !isEditing) return <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center"><div className="max-w-md p-5 text-center"><p className="text-gray-500 dark:text-gray-400 mb-4">{error}</p><button onClick={() => { setError(null); setIsEditing(true); }} className="px-4 py-2 bg-gray-800 dark:bg-gray-700 text-white rounded">Create Profile</button></div></div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 overflow-x-hidden">
       {/* Top Navbar */}
       <nav className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-        <div className="max-w-[1040px] mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="max-w-[1040px] mx-auto px-3 sm:px-6 h-14 flex items-center justify-between">
           <img src="/Gidy_logo_full_transparent.png" alt="Gidy" className="h-8" />
           <div className="hidden md:flex gap-8 text-sm text-gray-600 dark:text-gray-400">
             <a href="#" className="hover:text-gray-900 dark:hover:text-white transition">Jobs</a>
@@ -393,15 +393,15 @@ function Profile() {
         </div>
       </nav>
 
-      <div className="max-w-5xl mx-auto p-5">
+      <div className="max-w-5xl mx-auto px-3 sm:px-6 py-5">
         {/* Dark Mode Toggle */}
         <div className="flex justify-end mb-4">
           <button onClick={() => setDarkMode(!darkMode)} className="px-3 py-1 text-sm rounded bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-sm">{darkMode ? '☀️ Light' : '🌙 Dark'}</button>
         </div>
 
         {/* Header Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex justify-between items-start mb-4 relative">
-          <div className="flex gap-4 items-start flex-1">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6 mb-4 relative">
+          <div className="flex flex-col sm:flex-row gap-4 w-full">
             {isEditing ? (
               <input name="avatar" value={formData.avatar} onChange={handleChange} placeholder="Avatar URL" className={inputCls} />
             ) : (
@@ -429,59 +429,67 @@ function Profile() {
                     </svg>
                     <p className="text-sm text-gray-500 dark:text-gray-400">{profile?.email || 'No email found'}</p>
                   </div>
-                  <div className="flex items-start gap-3 mb-3">
+                  {/* Bio */}
+                  <div className="mb-3">
                     {profile?.bio ? (
-                      <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed flex-1">{profile.bio}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{profile.bio}</p>
                     ) : (
-                      <p className="text-sm text-gray-400 dark:text-gray-500 italic flex-1">No bio yet. Generate one!</p>
+                      <p className="text-sm text-gray-400 dark:text-gray-500 italic">No bio yet. Generate one!</p>
                     )}
-                    <button 
-                      onClick={handleGenerateBio} 
-                      disabled={generatingBio}
-                      className="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs rounded-lg hover:from-purple-600 hover:to-blue-600 flex items-center gap-1.5 shrink-0 transition shadow-sm"
-                    >
-                      {generatingBio ? (
-                        <>
-                          <svg className="animate-spin h-3 w-3" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Generating...
-                        </>
-                      ) : (
-                        <>
-                          ✨ Generate Bio
-                        </>
-                      )}
-                    </button>
                   </div>
+                  
+                  {/* Action Buttons - Stacked on mobile, row on desktop */}
                   {!isEditing && (
-                    profile?.resume ? (
-                      <a href={profile.resume} target="_blank" rel="noopener noreferrer" className="mt-3 px-4 py-1.5 bg-blue-600 text-white text-sm rounded flex items-center gap-2 hover:bg-blue-700 w-fit">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Download Resume
-                      </a>
-                    ) : (
-                      <button onClick={() => toast.info("Resume download coming soon")} className="mt-3 px-4 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded flex items-center gap-2 hover:bg-gray-300 dark:hover:bg-gray-600 w-fit">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        ⬇ Download Resume
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <button 
+                        onClick={handleGenerateBio} 
+                        disabled={generatingBio}
+                        className="w-full sm:w-auto px-3 py-1.5 bg-gradient-to-r from-purple-500 to-blue-500 text-white text-xs rounded-lg hover:from-purple-600 hover:to-blue-600 flex items-center justify-center gap-1.5 transition shadow-sm"
+                      >
+                        {generatingBio ? (
+                          <>
+                            <svg className="animate-spin h-3 w-3" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Generating...
+                          </>
+                        ) : (
+                          <>
+                            ✨ Generate Bio
+                          </>
+                        )}
                       </button>
-                    )
+                      
+                      {profile?.resume ? (
+                        <a href={profile.resume} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-4 py-1.5 bg-blue-600 text-white text-sm rounded flex items-center justify-center gap-2 hover:bg-blue-700">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Download Resume
+                        </a>
+                      ) : (
+                        <button onClick={() => toast.info("Resume download coming soon")} className="w-full sm:w-auto px-4 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded flex items-center justify-center gap-2 hover:bg-gray-300 dark:hover:bg-gray-600">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          ⬇ Download Resume
+                        </button>
+                      )}
+                    </div>
                   )}
                 </>
               )}
             </div>
           </div>
-          <div className="flex gap-3 items-center">
+          
+          {/* Rewards Card - Below on mobile, right side on desktop */}
+          <div className="w-full sm:w-auto mt-4 sm:mt-0">
             {isEditing && (
-              <input name="resume" value={formData.resume} onChange={handleChange} placeholder="Resume URL" className={`${inputCls} min-w-[200px]`} />
+              <input name="resume" value={formData.resume} onChange={handleChange} placeholder="Resume URL" className={`${inputCls} w-full mb-3`} />
             )}
-            <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg p-3 shadow-sm">
-              <div className="flex items-center justify-center gap-8 mb-2">
+            <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg p-3 shadow-sm w-full">
+              <div className="flex items-center justify-center gap-4 sm:gap-8 mb-2">
                 <div className="text-center">
                   <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase mb-0.5">League</p>
                   <p className="text-sm font-bold text-gray-900 dark:text-white">Bronze</p>
@@ -504,6 +512,10 @@ function Profile() {
                 </button>
               </div>
             </div>
+          </div>
+          
+          {/* Edit and Menu buttons - Absolute positioned on desktop, inline on mobile */}
+          <div className="flex gap-2 items-center mt-3 sm:mt-0 sm:absolute sm:right-4 sm:top-4">
             <button onClick={openHeaderEditModal} className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded" title="Edit Profile">
               <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -528,7 +540,7 @@ function Profile() {
         </div>
 
         {/* Career Vision Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5 mb-4 w-full">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <h2 className="text-xs font-medium text-gray-400 dark:text-gray-500">Your Career Vision</h2>
@@ -539,7 +551,7 @@ function Profile() {
               </svg>
             </button>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
             <div>
               <p className="text-[11px] text-gray-400 dark:text-gray-500 mb-2">What you're growing into</p>
               <p className="text-sm text-gray-700 dark:text-gray-300">{profile?.careerVision?.growingInto || 'Add your vision'}</p>
@@ -556,9 +568,9 @@ function Profile() {
         </div>
 
         {/* Main Grid */}
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Left Column */}
-          <div className="space-y-4">
+          <div className="space-y-4 w-full">
             {/* Level Up Profile */}
             {!isEditing && (
               <div className={cardCls}>
@@ -634,7 +646,7 @@ function Profile() {
           </div>
 
           {/* Right Column */}
-          <div className="md:col-span-2 space-y-4">
+          <div className="lg:col-span-2 space-y-4 w-full">
             {/* Experience */}
             <div className={cardCls}>
               <div className="flex items-center justify-between mb-3">
